@@ -1,0 +1,685 @@
+\documentclass[11pt,a4paper]{article}
+
+% ============================================================
+% PAQUETES
+% ============================================================
+
+% Codificación y lenguaje
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{lmodern}
+\usepackage{textcomp}
+
+% Geometría
+\usepackage[margin=2.5cm]{geometry}
+
+% Gráficos
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+% Tablas
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{colortbl}
+
+% Símbolos
+\usepackage{amssymb}
+\usepackage{pifont}
+
+% Listas
+\usepackage{enumitem}
+
+% Encabezados y pies
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+% Hyperref (debe ir al final)
+\usepackage{hyperref}
+
+% ============================================================
+% COLORES CORPORATIVOS
+% ============================================================
+
+\definecolor{bancoblue}{HTML}{1A237E}
+\definecolor{bancolight}{HTML}{E8EAF6}
+\definecolor{bancored}{HTML}{C62828}
+\definecolor{bancoorange}{HTML}{E65100}
+\definecolor{bancogreen}{HTML}{2E7D32}
+\definecolor{bancogray}{HTML}{4C4C4C}
+\definecolor{codebg}{HTML}{F5F5F5}
+
+% ============================================================
+% HYPERREF
+% ============================================================
+
+\hypersetup{
+	colorlinks=true,
+	linkcolor=bancoblue,
+	urlcolor=bancoblue,
+	citecolor=bancoblue,
+	pdftitle={Gap Analysis de Ciberseguridad y Riesgo Tecnológico - Banco del Lago, S.A.},
+	pdfauthor={Walter Gómez}
+}
+
+% ============================================================
+% ENCABEZADOS Y PIES
+% ============================================================
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textcolor{bancogray}{\small Gap Analysis de Ciberseguridad --- Banco del Lago, S.A.}}
+\fancyhead[R]{\textcolor{bancogray}{\small \today}}
+\fancyfoot[C]{\thepage}
+\fancyfoot[L]{\textcolor{bancogray}{\small Confidencial --- Uso interno}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ============================================================
+% TÍTULOS
+% ============================================================
+
+\titleformat{\section}{\Large\bfseries\color{bancoblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{bancoblue}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{bancogray}}{\thesubsubsection}{1em}{}
+
+% ============================================================
+% CAJAS
+% ============================================================
+
+\newtcolorbox{infobox}[1][]{
+	colback=bancolight,
+	colframe=bancoblue,
+	fonttitle=\bfseries,
+	title=#1,
+	boxrule=0.5pt,
+	arc=2pt,
+	breakable
+}
+
+\newtcolorbox{warnbox}[1][]{
+	colback=red!5,
+	colframe=bancored,
+	fonttitle=\bfseries,
+	title=#1,
+	boxrule=0.5pt,
+	arc=2pt,
+	breakable
+}
+
+\newtcolorbox{okbox}[1][]{
+	colback=green!5,
+	colframe=bancogreen,
+	fonttitle=\bfseries,
+	title=#1,
+	boxrule=0.5pt,
+	arc=2pt,
+	breakable
+}
+
+% ============================================================
+% COMANDOS PARA SÍMBOLOS
+% ============================================================
+
+\newcommand{\checkmarkverde}{\textcolor{bancogreen}{\ding{51}}}
+\newcommand{\cruzroja}{\textcolor{bancored}{\ding{55}}}
+\newcommand{\alerta}{\textcolor{bancoorange}{\ding{43}}}
+\newcommand{\critico}{\textcolor{bancored}{\textbf{CRÍTICO}}}
+\newcommand{\alto}{\textcolor{bancoorange}{\textbf{ALTO}}}
+\newcommand{\medio}{\textcolor{yellow!80!black}{\textbf{MEDIO}}}
+\newcommand{\bajo}{\textcolor{bancogreen}{\textbf{BAJO}}}
+
+% ============================================================
+% TÍTULO
+% ============================================================
+
+\title{
+	\vspace{-1.5cm}
+	\textbf{\Huge Gap Analysis de Ciberseguridad}\\[0.3cm]
+	\textbf{\Huge y Riesgo Tecnológico}\\[0.5cm]
+	\Large Banco del Lago, S.A.\\[0.3cm]
+	\large Evaluación de Madurez, Plan de Remediación y Presentación Ejecutiva\\[0.5cm]
+	\normalsize Preparado por: Walter Gómez\\
+	\normalsize ISO 27001 Lead Implementer | DevSecOps Engineer\\
+	\normalsize \today
+}
+\date{}
+
+% ============================================================
+% DOCUMENTO
+% ============================================================
+
+\begin{document}
+	
+	\maketitle
+	\thispagestyle{empty}
+	
+	\begin{infobox}[Resumen Ejecutivo]
+		El presente documento consolida los resultados del \textbf{Gap Analysis de Ciberseguridad y Riesgo Tecnológico} realizado para Banco del Lago, S.A., una institución financiera guatemalteca sujeta a la supervisión de la Superintendencia de Bancos (SIB).
+		
+		La evaluación se estructuró contra los \textbf{6 dominios del NIST Cybersecurity Framework 2.0} (Gobernar, Identificar, Proteger, Detectar, Responder, Recuperar) y el estándar \textbf{ISO/IEC 27001:2022} como marco complementario. \\
+		
+		\textbf{Resultados principales:}
+		\begin{itemize}[leftmargin=1.5em]
+			\item Madurez promedio actual: \textbf{1.7 sobre 5.0} (nivel ``Gestionado bajo'').
+			\item Madurez objetivo: \textbf{3.9 sobre 5.0} (nivel ``Gestionado cuantitativamente'').
+			\item \textbf{40 hallazgos} identificados en los 6 dominios.
+			\item Inversión total estimada: \textbf{Q1,330,000} en 18 meses, estructurada en 3 horizontes.
+		\end{itemize}
+		
+		Los cinco hallazgos más críticos son: ausencia de CISO formal, falta de MFA en canales electrónicos, falta de visibilidad de endpoints, DRP no probado en 18 meses, y ausencia de plan de respuesta a incidentes.
+	\end{infobox}
+	
+	\vspace{0.5cm}
+	
+	\tableofcontents
+	
+	\newpage
+	
+	% ============================================================
+	% SECCIÓN 1: CONTEXTO
+	% ============================================================
+	
+	\section{Contexto y Alcance}
+	
+	\subsection{Perfil institucional}
+	
+	Banco del Lago, S.A. es una institución financiera guatemalteca con aproximadamente 2,800 empleados, 85 agencias, 180 cajeros automáticos, y 750,000 clientes activos. Opera bajo la supervisión de la Superintendencia de Bancos de Guatemala (SIB) y forma parte del Grupo Financiero del Lago.
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{@{}ll@{}}
+			\toprule
+			\textbf{Campo} & \textbf{Valor} \\ \midrule
+			Razón social & Banco del Lago, S.A. \\
+			Sede & Ciudad de Guatemala \\
+			Empleados & $\sim$2,800 \\
+			Activos totales & $\sim$Q39,290 millones ($\sim$US\$5,155 millones) \\
+			Agencias & 85 \\
+			Cajeros automáticos & 180 \\
+			Clientes activos & $\sim$750,000 \\
+			Modelo de nube & Híbrido \\
+			Core bancario & Producto comercial de terceros \\
+			SOC / CSIRT & Tercerizado (MDR) \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	
+	\subsection{Marco regulatorio aplicable}
+	
+	\begin{longtable}{@{}p{3cm}p{8cm}p{4cm}@{}}
+		\toprule
+		\textbf{Norma} & \textbf{Descripción} & \textbf{Relevancia} \\ \midrule
+		\endfirsthead
+		\toprule
+		\textbf{Norma} & \textbf{Descripción} & \textbf{Relevancia} \\ \midrule
+		\endhead
+		JM-98-2025 & Reglamento para la Administración del Riesgo Tecnológico. Vigente desde el 30-oct-2025. & Marco normativo principal \\ \midrule
+		JM-91-2024 / JM-99-2025 & Reglamento de Medidas de Seguridad en Canales Electrónicos y su modificación. & Aplica a banca en línea y móvil \\ \midrule
+		JM-62-2016 & Reglamento de Gobierno Corporativo. & Marco de gobernanza \\ \midrule
+		Decreto 15-2026 & Ley Integral para la Prevención y Represión del Lavado de Dinero. & Contexto regulatorio ampliado \\ \midrule
+		ISO/IEC 27001:2022 & Estándar internacional de gestión de seguridad de la información. No obligatorio en Guatemala. & Marco de referencia voluntario \\ \midrule
+		PCI DSS & Estándar de la industria de tarjetas de pago. & Aplica por operación de tarjetas \\ \bottomrule
+	\end{longtable}
+	
+	\subsection{Calendario de cumplimiento regulatorio}
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{@{}p{6cm}p{4cm}p{4cm}@{}}
+			\toprule
+			\textbf{Hito regulatorio} & \textbf{Fecha límite} & \textbf{Estatus} \\ \midrule
+			Actualización del Manual de Riesgo Tecnológico & Octubre 2026 & Pendiente \\
+			Actualización del DRP & Octubre 2026 & Pendiente \\
+			Clasificación de proveedores (Art. 52) & Dic 2026 -- Mar 2027 & Pendiente de confirmación \\
+			Revisión de canales electrónicos & Dic 2026 -- Mar 2027 & Estimado \\ \bottomrule
+		\end{tabular}
+	\end{table}
+	
+	\subsection{Incidente disparador}
+	
+	El proyecto se autoriza por la combinación de dos elementos:
+	
+	\begin{enumerate}[leftmargin=1.5em]
+		\item \textbf{Presión regulatoria con fecha límite.} La JM-98-2025 exige actualizar el Manual de Riesgo Tecnológico y el DRP antes de octubre 2026, y clasificar proveedores críticos antes de marzo 2027.
+		\item \textbf{Patrón de fraude sectorial.} El Ministerio Público acumuló más de 56,000 denuncias por fraude electrónico en tres años. Banco del Lago detectó un incidente de este tipo que expuso una debilidad de autenticación en uno de sus canales electrónicos.
+	\end{enumerate}
+	
+	% ============================================================
+	% SECCIÓN 2: METODOLOGÍA
+	% ============================================================
+	
+	\section{Metodología}
+	
+	\subsection{Framework de evaluación}
+	
+	La evaluación se estructuró contra los 6 dominios del NIST CSF 2.0:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{@{}clp{10.5cm}@{}}
+			\toprule
+			\textbf{\#} & \textbf{Dominio} & \textbf{Qué evalúa} \\ \midrule
+			1 & Gobernar (GV) & Estrategia, roles, políticas, supervisión, cadena de suministro \\
+			2 & Identificar (ID) & Activos, riesgos, mejora continua \\
+			3 & Proteger (PR) & Identidad, datos, infraestructura, plataformas \\
+			4 & Detectar (DE) & Monitoreo continuo, análisis de eventos \\
+			5 & Responder (RS) & Gestión de incidentes, comunicación, mitigación \\
+			6 & Recuperar (RC) & Planes de recuperación, comunicación post-incidente \\ \bottomrule
+		\end{tabular}
+	\end{table}
+	
+	\subsection{Escala de madurez}
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{@{}clp{8cm}@{}}
+			\toprule
+			\textbf{Nivel} & \textbf{Nombre} & \textbf{Descripción} \\ \midrule
+			1 & Inicial & Sin procesos formales. Actividades ad hoc. \\
+			2 & Gestionado & Procesos básicos definidos pero no documentados formalmente. \\
+			3 & Definido & Procesos documentados, comunicados y ejecutados consistentemente. \\
+			4 & Gestionado cuantitativamente & Procesos medidos con métricas. \\
+			5 & Optimizado & Mejora continua basada en datos. \\ \bottomrule
+		\end{tabular}
+	\end{table}
+	
+	\newpage
+	
+	% ============================================================
+	% SECCIÓN 3: RESULTADOS
+	% ============================================================
+	
+	\section{Resultados del Gap Analysis}
+	
+	\subsection{Madurez por dominio}
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{@{}lcccc@{}}
+			\toprule
+			\textbf{Dominio} & \textbf{Actual} & \textbf{Target} & \textbf{Gap} & \textbf{Estado} \\ \midrule
+			Gobernar (GV) & 1.7 & 3.8 & -2.1 & \critico \\
+			Identificar (ID) & 1.7 & 3.7 & -2.0 & \critico \\
+			Proteger (PR) & 2.0 & 4.0 & -2.0 & \alto \\
+			Detectar (DE) & 1.5 & 4.0 & -2.5 & \critico \\
+			Responder (RS) & 1.7 & 4.0 & -2.3 & \critico \\
+			Recuperar (RC) & 1.5 & 4.0 & -2.5 & \critico \\ \midrule
+			\textbf{Promedio} & \textbf{1.7} & \textbf{3.9} & \textbf{-2.2} & \\ \bottomrule
+		\end{tabular}
+	\end{table}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{capturas/dashboard-banco-del-lago.png}
+		\caption{Dashboard de madurez con KPIs, gráficas comparativas y tablas de remediación.}
+		\label{fig:dashboard}
+	\end{figure}
+	
+	\subsection{Los 5 hallazgos más críticos}
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{@{}clp{7cm}@{}}
+			\toprule
+			\textbf{\#} & \textbf{Hallazgo} & \textbf{Impacto} \\ \midrule
+			1 & No existe CISO formal & Sin liderazgo de seguridad \\
+			2 & No hay MFA en canales electrónicos & Incumplimiento JM-99-2025 \\
+			3 & No hay visibilidad de endpoints & Ataques invisibles \\
+			4 & DRP no probado en 18 meses & Recuperación no validada \\
+			5 & No hay plan de respuesta a incidentes & Crisis sin guion \\ \bottomrule
+		\end{tabular}
+	\end{table}
+	
+	% ============================================================
+	% SECCIÓN 4: PLAN DE REMEDIACIÓN
+	% ============================================================
+	
+	\section{Plan de Remediación}
+	
+	\subsection{Visión general}
+	
+	El plan se estructura en 3 horizontes:
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{@{}lllc@{}}
+			\toprule
+			\textbf{Horizonte} & \textbf{Plazo} & \textbf{Enfoque} & \textbf{Inversión} \\ \midrule
+			Horizonte 1 & 0-90 días & Quick wins & Q215,000 \\
+			Horizonte 2 & 3-6 meses & Trabajo estructural & Q700,000 \\
+			Horizonte 3 & 6-18 meses & Madurez & Q415,000 \\ \midrule
+			\textbf{Total} & & & \textbf{Q1,330,000} \\ \bottomrule
+		\end{tabular}
+	\end{table}
+	
+	\begin{warnbox}[Nota sobre el CISO]
+		El costo del CISO (Q600,000/año) representa el 45\% de la inversión total. Sin ese rol, las demás acciones no tienen quien las lidere.
+	\end{warnbox}
+	
+	\subsection{Horizonte 1: Quick Wins (90 días)}
+	
+	\begin{longtable}{@{}p{7cm}p{3cm}c@{}}
+		\toprule
+		\textbf{Acción} & \textbf{Dominio} & \textbf{Inversión} \\ \midrule
+		\endfirsthead
+		\toprule
+		\textbf{Acción} & \textbf{Dominio} & \textbf{Inversión} \\ \midrule
+		\endhead
+		MFA en canales electrónicos & Proteger & Q50,000 \\
+		Sysmon + Wazuh en endpoints & Detectar & Q30,000 \\
+		Monitoreo de canales electrónicos & Detectar & Q20,000 \\
+		Plan de respuesta a incidentes & Responder & Q20,000 \\
+		Prueba del DRP & Recuperar & Q15,000 \\
+		Concientización y simulacros & Proteger & Q15,000 \\
+		Clasificación de proveedores & Gobernar & Q15,000 \\
+		Evaluación de riesgo cibernético & Identificar & Q15,000 \\
+		Plan de comunicación post-incidente & Recuperar & Q10,000 \\
+		RTO/RPO documentados & Recuperar & Q10,000 \\
+		Otros & Varios & Q15,000 \\ \midrule
+		\textbf{Total Horizonte 1} & & \textbf{Q215,000} \\ \bottomrule
+	\end{longtable}
+	
+	\newpage
+	
+	\subsection{Horizonte 2: Trabajo Estructural (6 meses)}
+	
+	\begin{longtable}{@{}p{6cm}p{4cm}c@{}}
+		\toprule
+		\textbf{Acción} & \textbf{Dominio} & \textbf{Inversión} \\ \midrule
+		\endfirsthead
+		\toprule
+		\textbf{Acción} & \textbf{Dominio} & \textbf{Inversión} \\ \midrule
+		\endhead
+		CISO (anual) & Gobernar & Q600,000 \\
+		EDR en endpoints & Proteger & Q120,000 \\
+		PAM & Proteger & Q80,000 \\
+		Clasificación y DLP & Proteger & Q60,000 \\
+		Backups inmutables & Recuperar & Q50,000 \\
+		SIEM propio (Wazuh) & Detectar & Q50,000 \\
+		Pruebas de penetración & Proteger & Q50,000 \\
+		Otros & Varios & Q240,000 \\ \midrule
+		\textbf{Total Horizonte 2} & & \textbf{Q700,000} \\ \bottomrule
+	\end{longtable}
+	
+	\subsection{Horizonte 3: Madurez (18 meses)}
+	
+	\begin{longtable}{@{}p{6cm}p{4cm}c@{}}
+		\toprule
+		\textbf{Acción} & \textbf{Dominio} & \textbf{Inversión} \\ \midrule
+		\endfirsthead
+		\toprule
+		\textbf{Acción} & \textbf{Dominio} & \textbf{Inversión} \\ \midrule
+		\endhead
+		SOAR & Detectar/Responder & Q100,000 \\
+		Pruebas de penetración avanzadas & Proteger & Q80,000 \\
+		Auditoría interna & Todos & Q50,000 \\
+		Preparación ISO 27001 & Todos & Q50,000 \\
+		Auditoría de certificación & Todos & Q45,000 \\
+		Simulacros anuales & Responder/Recuperar & Q50,000 \\
+		Otros & Varios & Q40,000 \\ \midrule
+		\textbf{Total Horizonte 3} & & \textbf{Q415,000} \\ \bottomrule
+	\end{longtable}
+	
+	\newpage
+	
+	% ============================================================
+	% SECCIÓN 5: CONCLUSIONES
+	% ============================================================
+	
+	\section{Conclusiones}
+	
+	\begin{okbox}[Hallazgo Central]
+		El banco tiene actividades de seguridad, pero no tiene estructura, no tiene métricas, y no tiene mejora continua. La madurez promedio de 1.7 sobre 5.0 refleja un programa ``Gestionado bajo'' que depende de esfuerzos individuales, no de procesos institucionalizados.
+	\end{okbox}
+	
+	\subsection{Los 3 problemas de raíz}
+	
+	\begin{enumerate}[leftmargin=1.5em]
+		\item \textbf{No hay CISO formal.} La función está repartida entre TI y Riesgos. Sin un líder con autoridad, presupuesto y rendición de cuentas al Consejo, las otras 39 brechas no tienen quien las cierre.
+		\item \textbf{No hay visibilidad.} El banco no ve sus endpoints, no ve su red interna, no ve sus canales electrónicos. Sin visibilidad, la detección es imposible, y la respuesta es reactiva.
+		\item \textbf{No hay recuperación probada.} El DRP no se prueba en 18 meses. Un DRP no probado es un DRP que no existe.
+	\end{enumerate}
+	
+	\subsection{Recomendación final}
+	
+	Aprobar el presupuesto del Horizonte 1 (Q215,000) para los primeros 90 días, y autorizar la creación de la posición de CISO para el Horizonte 2. Sin esas dos decisiones, el plan de remediación no avanza.
+	
+	% ============================================================
+	% SECCIÓN 6: ANEXOS
+	% ============================================================
+	
+	\newpage
+	\appendix
+	
+	\section{Anexo A: Resumen de Hallazgos por Dominio}
+	
+	\begin{longtable}{@{}p{2cm}p{2cm}p{6.5cm}c@{}}
+		\toprule
+		\textbf{Dominio} & \textbf{Hallazgo} & \textbf{Descripción} & \textbf{Nivel} \\ \midrule
+		\endfirsthead
+		\toprule
+		\textbf{Dominio} & \textbf{Hallazgo} & \textbf{Descripción} & \textbf{Nivel} \\ \midrule
+		\endhead
+		Gobernar & GV.OC-01 & No existe documento de contexto de ciberseguridad & 2 \\
+		Gobernar & GV.RM-01 & No existe declaración de apetito de riesgo & 2 \\
+		Gobernar & GV.RR-01 & No existe CISO formal & 1 \\
+		Gobernar & GV.RR-02 & Responsabilidades no documentadas & 1 \\
+		Gobernar & GV.PO-01 & Políticas desactualizadas e incompletas & 2 \\
+		Gobernar & GV.OV-01 & Sin reportes de ciberseguridad al Comité & 2 \\
+		Gobernar & GV.SC-01 & Sin clasificación de proveedores & 1 \\
+		Gobernar & GV.SC-02 & Sin cláusulas de seguridad en contratos & 1 \\ \midrule
+		Identificar & ID.AM-01 & Inventario parcial y desactualizado & 2 \\
+		Identificar & ID.AM-02 & Sin dueños ni clasificación de criticidad & 2 \\
+		Identificar & ID.AM-03 & Sin inventario de software & 2 \\
+		Identificar & ID.RA-01 & Sin evaluación de riesgo cibernético & 2 \\
+		Identificar & ID.RA-02 & Sin análisis de amenazas/vulnerabilidades & 2 \\
+		Identificar & ID.RA-03 & Sin cuantificación financiera & 2 \\
+		Identificar & ID.IM-01 & Sin lecciones aprendidas post-incidente & 1 \\
+		Identificar & ID.IM-02 & Sin métricas de mejora & 1 \\ \midrule
+		Proteger & PR.AA-01 & Sin MFA en canales electrónicos & 2 \\
+		Proteger & PR.AA-02 & Sin PAM, cuentas compartidas & 2 \\
+		Proteger & PR.AA-03 & Sin revisión periódica de accesos & 2 \\
+		Proteger & PR.AT-01 & Sin programa de concientización & 1 \\
+		Proteger & PR.AT-02 & Sin simulacros de phishing & 1 \\
+		Proteger & PR.DS-01 & Sin clasificación de información & 2 \\
+		Proteger & PR.DS-02 & Sin cifrado en tránsito completo & 2 \\
+		Proteger & PR.DS-03 & Sin DLP ni retención & 2 \\
+		Proteger & PR.PS-01 & Sin gestión de vulnerabilidades & 2 \\
+		Proteger & PR.PS-02 & Sin pruebas de penetración & 2 \\
+		Proteger & PR.PS-03 & Sin EDR en endpoints & 2 \\
+		Proteger & PR.IR-01 & DRP no probado en 18 meses & 3 \\
+		Proteger & PR.IR-02 & Sin segmentación de red & 3 \\ \midrule
+		Detectar & DE.CM-01 & Sin visibilidad de endpoints & 2 \\
+		Detectar & DE.CM-02 & Sin visibilidad de red interna & 2 \\
+		Detectar & DE.CM-03 & Sin visibilidad de nube & 2 \\
+		Detectar & DE.CM-04 & Sin monitoreo de canales electrónicos & 2 \\
+		Detectar & DE.AE-01 & Sin correlación con contexto del banco & 1 \\
+		Detectar & DE.AE-02 & Sin métricas de detección & 1 \\
+		Detectar & DE.AE-03 & Sin proceso de triaje & 1 \\ \midrule
+		Responder & RS.MA-01 & Sin plan formal de respuesta & 2 \\
+		Responder & RS.MA-02 & Sin roles ni escalamiento & 2 \\
+		Responder & RS.MA-03 & Sin playbooks de respuesta & 2 \\
+		Responder & RS.AN-01 & Sin capacidad forense interna & 1 \\
+		Responder & RS.AN-02 & Sin documentación de causa raíz & 1 \\
+		Responder & RS.AN-03 & Sin herramientas forenses & 1 \\
+		Responder & RS.CO-01 & Sin plan de comunicación de crisis & 2 \\
+		Responder & RS.CO-02 & Sin protocolo con SIB ni clientes & 2 \\
+		Responder & RS.CO-03 & Sin portavoz ni plantillas & 2 \\
+		Responder & RS.MI-01 & Sin procedimientos de contención & 2 \\
+		Responder & RS.MI-02 & Sin coordinación con MDR & 2 \\
+		Responder & RS.MI-03 & Sin procedimiento de recuperación & 2 \\ \midrule
+		Recuperar & RC.RP-01 & DRP no probado en 18 meses & 2 \\
+		Recuperar & RC.RP-02 & Sin RTO ni RPO documentados & 2 \\
+		Recuperar & RC.RP-03 & Sin procedimientos de recuperación & 2 \\
+		Recuperar & RC.RP-04 & Sin backups inmutables & 2 \\
+		Recuperar & RC.RP-05 & Sin plan de recuperación escalonado & 2 \\
+		Recuperar & RC.CO-01 & Sin plan de comunicación post-incidente & 1 \\
+		Recuperar & RC.CO-02 & Sin protocolos con stakeholders & 1 \\
+		Recuperar & RC.CO-03 & Sin lecciones aprendidas ni actualización del DRP & 1 \\ \bottomrule
+	\end{longtable}
+	
+	\newpage
+	
+	\section{Anexo B: Glosario de Términos}
+	
+	\begin{longtable}{@{}p{2.5cm}p{12.5cm}@{}}
+		\toprule
+		\textbf{Término} & \textbf{Definición} \\ \midrule
+		\endfirsthead
+		\toprule
+		\textbf{Término} & \textbf{Definición} \\ \midrule
+		\endhead
+		ALE & Annualized Loss Expectancy. Pérdida anual esperada. \\
+		CISO & Chief Information Security Officer. Oficial de Seguridad de la Información. \\
+		CSF & Cybersecurity Framework. Marco de ciberseguridad del NIST. \\
+		DLP & Data Loss Prevention. Prevención de pérdida de datos. \\
+		DRP & Disaster Recovery Plan. Plan de recuperación ante desastres. \\
+		EDR & Endpoint Detection and Response. Detección y respuesta en endpoints. \\
+		ISO 27001 & Estándar internacional de gestión de seguridad de la información. \\
+		JM & Junta Monetaria. Emite regulación para el sistema financiero guatemalteco. \\
+		MDR & Managed Detection and Response. Detección y respuesta gestionada. \\
+		MFA & Multi-Factor Authentication. Autenticación multifactor. \\
+		NIST & National Institute of Standards and Technology. \\
+		PAM & Privileged Access Management. Gestión de accesos privilegiados. \\
+		RPO & Recovery Point Objective. Punto objetivo de recuperación. \\
+		RTO & Recovery Time Objective. Tiempo objetivo de recuperación. \\
+		SIB & Superintendencia de Bancos de Guatemala. \\
+		SIEM & Security Information and Event Management. \\
+		SOAR & Security Orchestration, Automation and Response. \\
+		SOC & Security Operations Center. \\
+		\bottomrule
+	\end{longtable}
+	
+	\newpage
+	
+	\section{Anexo C: Perfil Completo de la Entidad}
+	
+	\subsection{Identidad institucional}
+	
+	\begin{longtable}{@{}p{3cm}p{12cm}@{}}
+		\toprule
+		\textbf{Campo} & \textbf{Valor} \\ \midrule
+		\endfirsthead
+		\toprule
+		\textbf{Campo} & \textbf{Valor} \\ \midrule
+		\endhead
+		Razón social & Banco del Lago, S.A. \\
+		Grupo financiero & Grupo Financiero del Lago (banco + financiera + tarjetas + seguros) \\
+		Sede & Ciudad de Guatemala, zona financiera \\
+		Ente supervisor & Superintendencia de Bancos de Guatemala (SIB) \\
+		\bottomrule
+	\end{longtable}
+	
+	\subsection{Tamaño y posición de mercado}
+	
+	\begin{longtable}{@{}p{7cm}p{4cm}p{3.5cm}@{}}
+		\toprule
+		\textbf{Campo} & \textbf{Valor} & \textbf{Estatus} \\ \midrule
+		\endfirsthead
+		\toprule
+		\textbf{Campo} & \textbf{Valor} & \textbf{Estatus} \\ \midrule
+		\endhead
+		Empleados & $\sim$2,800 & Estimado \\
+		Activos totales & $\sim$Q39,290 millones & Verificado \\
+		Cartera de préstamos & $\sim$Q29,190 millones & Verificado \\
+		Patrimonio & $\sim$Q4,223 millones & Verificado \\
+		Índice de adecuación de capital & $\sim$13.5--14\% & Estimado \\
+		Participación en activos del sistema & $\sim$6\% & Estimado \\
+		Posición en el ranking bancario & 6\textdegree \, a 10\textdegree \, lugar & Estimado \\
+		\bottomrule
+	\end{longtable}
+	
+	\subsection{Red de distribución y clientes}
+	
+	\begin{longtable}{@{}p{6.5cm}p{5cm}p{3cm}@{}}
+		\toprule
+		\textbf{Campo} & \textbf{Valor} & \textbf{Estatus} \\ \midrule
+		\endfirsthead
+		\toprule
+		\textbf{Campo} & \textbf{Valor} & \textbf{Estatus} \\ \midrule
+		\endhead
+		Agencias & 85 & Supuesto \\
+		Cajeros automáticos propios & 180 & Supuesto \\
+		Clientes activos & $\sim$750,000 & Supuesto \\
+		Canales digitales & Banca en línea y banca móvil & Supuesto \\
+		Volumen mensual de transacciones & $\sim$2.8 millones & Supuesto \\
+		Distribución por canal & 70\% digital / 30\% agencia & Supuesto \\
+		\bottomrule
+	\end{longtable}
+	
+	\subsection{Infraestructura tecnológica}
+	
+	\begin{longtable}{@{}p{6cm}p{8cm}@{}}
+		\toprule
+		\textbf{Campo} & \textbf{Valor} \\ \midrule
+		\endfirsthead
+		\toprule
+		\textbf{Campo} & \textbf{Valor} \\ \midrule
+		\endhead
+		Centro de cómputo principal & Ciudad de Guatemala \\
+		Centro de cómputo alterno / DRP & Fuera del área metropolitana \\
+		Core bancario & Producto comercial de terceros \\
+		Modelo de nube & Híbrido (cargas no críticas en nube; core y datos sensibles on-premise) \\
+		SOC / CSIRT & Tercerizado (MDR), sin capacidad 24/7 interna \\
+		\bottomrule
+	\end{longtable}
+	
+	\vspace{1cm}
+	
+	\subsubsection*{Proveedores tecnológicos críticos}
+	
+	\begin{longtable}{@{}cp{9cm}@{}}
+		\toprule
+		\textbf{\#} & \textbf{Proveedor} \\ \midrule
+		\endfirsthead
+		\toprule
+		\textbf{\#} & \textbf{Proveedor} \\ \midrule
+		\endhead
+		1 & Proveedor de core bancario \\
+		2 & Procesador/switch de tarjetas \\
+		3 & Proveedor de nube \\
+		4 & Proveedor de canales electrónicos / banca móvil \\
+		5 & Proveedor de mensajería SWIFT \\
+		6 & Proveedor de centro de cómputo alterno \\
+		\bottomrule
+	\end{longtable}
+	
+	\subsection{Gobernanza}
+	
+	\begin{longtable}{@{}p{6.5cm}p{6cm}p{2cm}@{}}
+		\toprule
+		\textbf{Órgano / Rol} & \textbf{Situación} & \textbf{Estatus} \\ \midrule
+		\endfirsthead
+		\toprule
+		\textbf{Órgano / Rol} & \textbf{Situación} & \textbf{Estatus} \\ \midrule
+		\endhead
+		Consejo de Administración & Responsable del riesgo tecnológico & Verificado \\
+		Comité de Gestión de Riesgos & Existe y opera & Verificado \\
+		Comité de Auditoría & Existe y opera & Verificado \\
+		Unidad de Administración de Riesgos & Existe y opera & Verificado \\
+		Auditoría Interna & Reporta al Comité de Auditoría & Verificado \\
+		Oficial de Seguridad (CISO) & No existe formalmente & Supuesto \\
+		\bottomrule
+	\end{longtable}
+	
+	\begin{warnbox}[Nota sobre los datos]
+		Toda cifra marcada como \textbf{[SUPUESTO]} es una decisión de diseño del caso de estudio, no un dato de ningún banco real. Las cifras marcadas \textbf{[VERIFICADO]} provienen de fuentes públicas sobre Banco Promerica de Guatemala (informes financieros y de mercado a 2025--2026) con un ajuste del +15\% aplicado de forma explícita y trazable.
+	\end{warnbox}
+	
+	\vspace{1cm}
+	
+	\begin{center}
+		\textcolor{bancogray}{\rule{0.5\textwidth}{0.4pt}}\\[0.3cm]
+		\textit{Documento preparado como parte del portafolio técnico de Walter Gómez.\\
+			Proyecto 4: Modelo de Madurez.}\\[0.3cm]
+		\textcolor{bancogray}{\rule{0.5\textwidth}{0.4pt}}
+	\end{center}
+	
+\end{document}

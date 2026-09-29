@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Madurez — Banco del Lago, S.A.</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            color: #1A237E;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #1A237E;
+            color: white;
+            padding: 25px 30px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        header .meta {
+            font-size: 0.8rem;
+            opacity: 0.75;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            border-left: 5px solid #1A237E;
+        }
+
+        .kpi-card.critical { border-left-color: #C62828; }
+        .kpi-card.warning { border-left-color: #E65100; }
+        .kpi-card.success { border-left-color: #2E7D32; }
+        .kpi-card.info { border-left-color: #1976D2; }
+
+        .kpi-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #1A237E;
+        }
+
+        .kpi-sub {
+            font-size: 0.8rem;
+            color: #95a5a6;
+            margin-top: 5px;
+        }
+
+        .charts-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .chart-card h2 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #1A237E;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 8px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 280px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        th {
+            background-color: #1A237E;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 0.9rem;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .badge-critical {
+            background-color: #ffebee;
+            color: #C62828;
+        }
+
+        .badge-high {
+            background-color: #fff3e0;
+            color: #E65100;
+        }
+
+        .badge-medium {
+            background-color: #fffde7;
+            color: #F9A825;
+        }
+
+        .badge-low {
+            background-color: #e8f5e9;
+            color: #2E7D32;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #1A237E;
+            border-radius: 4px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #95a5a6;
+            font-size: 0.85rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: #1A237E;
+            margin: 30px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1A237E;
+        }
+
+        @media (max-width: 768px) {
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+            .kpi-value {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Dashboard de Madurez de Ciberseguridad</h1>
+    <p>Banco del Lago, S.A. — Gap Analysis NIST CSF 2.0 + ISO/IEC 27001:2022</p>
+    <div class="meta">Preparado por: Walter Gómez | Fecha: <span id="fecha"></span></div>
+</header>
+
+<!-- KPIs principales -->
+<div class="kpi-row">
+    <div class="kpi-card critical">
+        <div class="kpi-label">Madurez Promedio Actual</div>
+        <div class="kpi-value">1.7 / 5.0</div>
+        <div class="kpi-sub">Nivel "Gestionado bajo"</div>
+    </div>
+    <div class="kpi-card warning">
+        <div class="kpi-label">Madurez Target</div>
+        <div class="kpi-value">3.9 / 5.0</div>
+        <div class="kpi-sub">Nivel "Gestionado cuantitativamente"</div>
+    </div>
+    <div class="kpi-card info">
+        <div class="kpi-label">Hallazgos Identificados</div>
+        <div class="kpi-value">40</div>
+        <div class="kpi-sub">En 6 dominios del CSF 2.0</div>
+    </div>
+    <div class="kpi-card success">
+        <div class="kpi-label">Inversión Total</div>
+        <div class="kpi-value">Q1,330,000</div>
+        <div class="kpi-sub">18 meses · 3 horizontes</div>
+    </div>
+</div>
+
+<!-- Gráficas -->
+<div class="charts-row">
+    <div class="chart-card">
+        <h2>Madurez por Dominio (Actual vs Target)</h2>
+        <div class="chart-container">
+            <canvas id="chartMadurez"></canvas>
+        </div>
+    </div>
+    <div class="chart-card">
+        <h2>Distribución de Hallazgos por Severidad</h2>
+        <div class="chart-container">
+            <canvas id="chartSeveridad"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="charts-row">
+    <div class="chart-card">
+        <h2>Inversión por Horizonte (Q)</h2>
+        <div class="chart-container">
+            <canvas id="chartInversion"></canvas>
+        </div>
+    </div>
+    <div class="chart-card">
+        <h2>Madurez Actual vs Target (Radar)</h2>
+        <div class="chart-container">
+            <canvas id="chartRadar"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Tabla de dominios -->
+<h2 class="section-title">Madurez por Dominio</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Dominio</th>
+            <th>Madurez Actual</th>
+            <th>Target</th>
+            <th>Gap</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Gobernar (GV)</td>
+            <td>1.7</td>
+            <td>3.8</td>
+            <td>-2.1</td>
+            <td><span class="badge badge-critical">Crítico</span></td>
+        </tr>
+        <tr>
+            <td>Identificar (ID)</td>
+            <td>1.7</td>
+            <td>3.7</td>
+            <td>-2.0</td>
+            <td><span class="badge badge-critical">Crítico</span></td>
+        </tr>
+        <tr>
+            <td>Proteger (PR)</td>
+            <td>2.0</td>
+            <td>4.0</td>
+            <td>-2.0</td>
+            <td><span class="badge badge-high">Alto</span></td>
+        </tr>
+        <tr>
+            <td>Detectar (DE)</td>
+            <td>1.5</td>
+            <td>4.0</td>
+            <td>-2.5</td>
+            <td><span class="badge badge-critical">Crítico</span></td>
+        </tr>
+        <tr>
+            <td>Responder (RS)</td>
+            <td>1.7</td>
+            <td>4.0</td>
+            <td>-2.3</td>
+            <td><span class="badge badge-critical">Crítico</span></td>
+        </tr>
+        <tr>
+            <td>Recuperar (RC)</td>
+            <td>1.5</td>
+            <td>4.0</td>
+            <td>-2.5</td>
+            <td><span class="badge badge-critical">Crítico</span></td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Tabla de horizontes -->
+<h2 class="section-title">Plan de Remediación</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Horizonte</th>
+            <th>Plazo</th>
+            <th>Enfoque</th>
+            <th>Inversión</th>
+            <th>Progreso</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Horizonte 1</strong></td>
+            <td>0-90 días</td>
+            <td>Quick wins</td>
+            <td>Q215,000</td>
+            <td><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div></td>
+        </tr>
+        <tr>
+            <td><strong>Horizonte 2</strong></td>
+            <td>3-6 meses</td>
+            <td>Trabajo estructural</td>
+            <td>Q700,000</td>
+            <td><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div></td>
+        </tr>
+        <tr>
+            <td><strong>Horizonte 3</strong></td>
+            <td>6-18 meses</td>
+            <td>Madurez</td>
+            <td>Q415,000</td>
+            <td><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div></td>
+        </tr>
+    </tbody>
+</table>
+
+<footer>
+    <p>Dashboard generado como parte del portafolio técnico de Walter Gómez</p>
+    <p>Framework: NIST CSF 2.0 + ISO/IEC 27001:2022 | Escala de madurez: 1 (Inicial) a 5 (Optimizado)</p>
+</footer>
+
+<script>
+    // Fecha actual
+    document.getElementById('fecha').textContent = new Date().toLocaleDateString('es-GT', {
+        year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    // Colores
+    const colors = {
+        blue: '#1A237E',
+        red: '#C62828',
+        orange: '#E65100',
+        green: '#2E7D32',
+        lightBlue: '#5C6BC0',
+        gray: '#7f8c8d'
+    };
+
+    // Gráfica 1: Madurez por dominio
+    new Chart(document.getElementById('chartMadurez'), {
+        type: 'bar',
+        data: {
+            labels: ['Gobernar', 'Identificar', 'Proteger', 'Detectar', 'Responder', 'Recuperar'],
+            datasets: [
+                {
+                    label: 'Madurez Actual',
+                    data: [1.7, 1.7, 2.0, 1.5, 1.7, 1.5],
+                    backgroundColor: colors.red,
+                    borderRadius: 4
+                },
+                {
+                    label: 'Target',
+                    data: [3.8, 3.7, 4.0, 4.0, 4.0, 4.0],
+                    backgroundColor: colors.green,
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { padding: 15, font: { size: 12 } } }
+            },
+            scales: {
+                y: { beginAtZero: true, max: 5, ticks: { stepSize: 1 } }
+            }
+        }
+    });
+
+    // Gráfica 2: Distribución de hallazgos por severidad
+    new Chart(document.getElementById('chartSeveridad'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Crítico', 'Alto', 'Medio', 'Bajo'],
+            datasets: [{
+                data: [18, 14, 6, 2],
+                backgroundColor: [colors.red, colors.orange, '#F9A825', colors.green],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { padding: 15, font: { size: 12 } } }
+            }
+        }
+    });
+
+    // Gráfica 3: Inversión por horizonte
+    new Chart(document.getElementById('chartInversion'), {
+        type: 'bar',
+        data: {
+            labels: ['Horizonte 1', 'Horizonte 2', 'Horizonte 3'],
+            datasets: [{
+                label: 'Inversión (Q)',
+                data: [215000, 700000, 415000],
+                backgroundColor: [colors.green, colors.orange, colors.lightBlue],
+                borderRadius: 6,
+                barThickness: 80
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Q' + context.parsed.y.toLocaleString('es-GT');
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return 'Q' + (value / 1000) + 'K';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Gráfica 4: Radar de madurez
+    new Chart(document.getElementById('chartRadar'), {
+        type: 'radar',
+        data: {
+            labels: ['Gobernar', 'Identificar', 'Proteger', 'Detectar', 'Responder', 'Recuperar'],
+            datasets: [
+                {
+                    label: 'Madurez Actual',
+                    data: [1.7, 1.7, 2.0, 1.5, 1.7, 1.5],
+                    backgroundColor: 'rgba(198, 40, 40, 0.2)',
+                    borderColor: colors.red,
+                    borderWidth: 2,
+                    pointBackgroundColor: colors.red
+                },
+                {
+                    label: 'Target',
+                    data: [3.8, 3.7, 4.0, 4.0, 4.0, 4.0],
+                    backgroundColor: 'rgba(46, 125, 50, 0.2)',
+                    borderColor: colors.green,
+                    borderWidth: 2,
+                    pointBackgroundColor: colors.green
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { padding: 15, font: { size: 12 } } }
+            },
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    max: 5,
+                    ticks: { stepSize: 1 }
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
